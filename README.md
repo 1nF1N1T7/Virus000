@@ -8,6 +8,6 @@ A Python BackDoor
 * run! / kill! {process}
 * ss! {file.png}  (take screenShot)
 
-![plot](img/IMG_22012.gif)
+![plot](vr000.gif)
 
 
