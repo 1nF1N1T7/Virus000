@@ -5,7 +5,7 @@ A Python BackDoor
 
 * persistance!    (only works in windows)
 * download! / upload! {file}
-* encrypt! / decrypt {file} 
+* encrypt! / decrypt! {file} 
 * run! / kill! {process}
 * ss! {file.png}  (take screenShot)
 * quit!  (exit and stop scilently)
